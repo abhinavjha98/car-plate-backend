@@ -76,23 +76,25 @@ class PCNView(viewsets.ViewSet):
 
 class ImageText(viewsets.ViewSet):
     def getImage(self,request):
-#         reader = easyocr.Reader(['en','fr','de'])
-#         data = request.data
-#         file = data["file"]
-#         file_name = default_storage.save('image/images/'+file.name, file)
-# # file extension (get the las 4 chars)
-#         file = default_storage.open(file_name)
-#         # handle file extension
-#         file_url = default_storage.url(file)
-#         result = reader.readtext(file_url,detail = 0, paragraph=False)
-#         print(result)
-#         imageMessage="";
-#         for x in result:
-#             imageMessage += ' '+x
-#         r = "([A-Z]{2}).*?([0-9]{2}).*?[A-Z]{})"
+        reader = easyocr.Reader(['en','fr','de'])
+        data = request.data
+        file = data["file"]
+        file_name = default_storage.save('image/images/'+file.name, file)
+# file extension (get the las 4 chars)
+        file = default_storage.open(file_name)
+        # handle file extension
+        file_url = default_storage.url(file)
+        result = reader.readtext(file_url,detail = 0, paragraph=False)
+        print(result)
+        imageMessage="";
+        for x in result:
+            imageMessage += ' '+x
         import re
-        pattern = re.compile("^([A-Z]{2}).*?([0-9]{2}).*?\s+([A-Z]{2})")
-        a = pattern.search(" eis (SLA250 2llie SN66 XMZ")
-        print(a)
-
-        return Response(data={'message': a}, status=status.HTTP_200_OK)
+        textToDisplay = ""
+        pattern = re.compile(r"[A-Z]{2}[0-9]{2}\s+[A-Z]{3}")
+        a = re.search(pattern,imageMessage)
+        if a is not None:
+            textToDisplay = a.group(0)
+        else:
+            textToDisplay = imageMessage
+        return Response(data={'message': textToDisplay}, status=status.HTTP_200_OK)
