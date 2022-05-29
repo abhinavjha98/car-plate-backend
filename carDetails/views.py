@@ -76,7 +76,7 @@ class PCNView(viewsets.ViewSet):
 
 class ImageText(viewsets.ViewSet):
     def getImage(self,request):
-        reader = easyocr.Reader(['en','fr','de'])
+        reader = easyocr.Reader(['en','fr','de'],gpu=False)
         data = request.data
         file = data["file"]
         file_name = default_storage.save('image/images/'+file.name, file)
