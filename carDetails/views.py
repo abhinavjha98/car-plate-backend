@@ -67,7 +67,7 @@ class PCNView(viewsets.ViewSet):
             status=status.HTTP_200_OK
         )
     def get_pcn_summary(self,request):
-        dt = PCNTable.objects.all()
+        dt = PCNTable.objects.all().order_by('-id')[:5]
         res = PCNTableSerializer(dt, many=True,context={'request': request}).data
         return Response(
             data={'status': True, 'data': res}, 
