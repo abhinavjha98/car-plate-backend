@@ -1,5 +1,5 @@
 from django.contrib import admin
-from carDetails.models import CarDetails, PCNCode, PCNTable
+from carDetails.models import CarDetails, EvidenceImage, PCNCode, PCNTable
 from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
@@ -18,6 +18,12 @@ class PCNTableAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     search_fields = ('user','pcnCode',)
     list_filter = ('user','pcnCode',)
 
+class EvidenceAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    list_display = ('carDetail','image',)
+    search_fields = ('carDetail', )
+    list_filter = ('carDetail',)
+
 admin.site.register(CarDetails,CarDetailsAdmin)
 admin.site.register(PCNCode,PCNAdmin)
 admin.site.register(PCNTable,PCNTableAdmin)
+admin.site.register(EvidenceImage,EvidenceAdmin)

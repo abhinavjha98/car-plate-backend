@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from carDetails.models import CarDetails, PCNCode, PCNTable
+from carDetails.models import CarDetails, EvidenceImage, PCNCode, PCNTable
 from carDetails.serializers import PCNCodeSerializer, PCNTableSerializer
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -34,6 +34,8 @@ class PCNView(viewsets.ViewSet):
         pcn_code = data["pcn_code"]
         reason = data["reason"]
         car_image = data.get('car_image', None)
+        multiple_files = request.FILES
+        media_files = multiple_files.getlist("media_file")
         
         if PCNCode.objects.filter(slug=pcn_code).exists():
             pcnCode = PCNCode.objects.get(slug=pcn_code)
@@ -45,6 +47,15 @@ class PCNView(viewsets.ViewSet):
           car_image = car_image
         )
         car_details.save()
+        if len(media_files) >= 1:
+            for i in range(len(media_files)):
+                evidence_image = EvidenceImage(
+                    carDetail=car_details,
+                    image=media_files[i],
+                )
+                evidence_image.save()
+        else:
+            pass
         date_of_creation = datetime.now()
         pcnTable = PCNTable(
             user=user,

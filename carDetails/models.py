@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from django.db import models
 from users.models import CustomUser,Base
 # Create your models here.
@@ -19,3 +20,7 @@ class PCNTable(Base):
     pcnCode = models.ForeignKey(PCNCode, null=True, on_delete=models.CASCADE, related_name="pcnCodes")
     date_of_creation = models.DateTimeField(null=True, blank=True)
     reason = models.CharField(max_length=150, null=True, blank=True)
+
+class EvidenceImage(Base):
+    carDetail = models.ForeignKey(CarDetails, null=True, on_delete=models.CASCADE, related_name="carDetails")
+    image = models.ImageField(upload_to='evidence/',null=True,blank=True)
