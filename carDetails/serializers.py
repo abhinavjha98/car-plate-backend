@@ -45,7 +45,8 @@ class PCNTableSerializer(serializers.ModelSerializer):
             return None
 
     def get_dateOfCreation(self,obj):
-        date_format = "%Y-%m-%d %H:%M:%S %p"
+        # date_format = "%Y-%m-%d %H:%M:%S %p"
+        date_format = "%d/%m/%Y %H:%M:%S %p"
         return datetime.strftime(obj.date_of_creation,date_format)
 
     class Meta:
