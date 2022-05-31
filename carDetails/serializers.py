@@ -1,5 +1,5 @@
 from datetime import datetime
-from carDetails.models import CarDetails, PCNCode, PCNTable
+from carDetails.models import CarDetails, EvidenceImage, PCNCode, PCNTable
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.pagination import PageNumberPagination
@@ -20,7 +20,13 @@ class PCNTableSerializer(serializers.ModelSerializer):
             pcnTable = PCNTable.objects.get(id=obj.id)
             cardetails = CarDetails.objects.filter(id=pcnTable.carDetails.id)
             print(cardetails)
-            data = [{"number_plate": i.number_plate,"car_model":i.car_model,"car_color":i.car_color,"car_location":i.car_location,"car_image":self.context['request'].build_absolute_uri(i.car_image.url)if i.car_image else None} for i in cardetails]
+            evidenceImage = EvidenceImage.objects.filter(carDetail=pcnTable.carDetails.id)
+            print(evidenceImage)
+            evidenceUrl=[]
+            if evidenceImage.exists():
+                for i in evidenceImage:
+                    evidenceUrl.append(self.context['request'].build_absolute_uri(i.image.url))
+            data = [{"number_plate": i.number_plate,"car_model":i.car_model,"car_color":i.car_color,"car_location":i.car_location,"car_image":self.context['request'].build_absolute_uri(i.car_image.url)if i.car_image else None,"evidence_image":evidenceUrl} for i in cardetails]
             return data
         except:
             return None
